@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Homeway(鴻緯)房產專業工作台</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: var(--primary); color: white; text-align: center; padding: 15px 0; font-weight: bold; }
+        .tabs { display: flex; background: white; border-bottom: 2px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .tab { flex: 1; text-align: center; padding: 15px; cursor: pointer; color: #7f8c8d; font-weight: bold; }
+        .tab.active { color: var(--accent); border-bottom: 3px solid var(--accent); background: #fff; }
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .content { display: none; }
+        .content.active { display: block; }
+        label { display: block; margin-top: 15px; font-size: 0.85em; color: #34495e; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .radio-group { display: flex; gap: 10px; margin-top: 5px; }
+        .radio-btn { flex: 1; text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; background: #fff; }
+        .radio-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+        button { width: 100%; background: var(--primary); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.1em; margin-top: 20px; font-weight: bold; cursor: pointer; }
+        .copy-btn { background: #e67e22 !important; margin-top: 10px !important; }
+        .result-box { background: #eef7f2; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 5px solid var(--accent); }
+        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ccc; font-size: 0.95em; }
+        .total-text { color: #e74c3c; font-weight: bold; font-size: 1.1em; }
+        .disclaimer { font-size: 0.75em; color: #95a5a6; margin-top: 15px; line-height: 1.4; text-align: justify; }
+        .sub-tip { font-weight: normal; color: #7f8c8d; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+
+<div class="header">🏠 Homeway(鴻緯)房產專業工作台</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="openTab(event, 'buyCost')">購屋自備試算</div>
+    <div class="tab" onclick="openTab(event, 'mortgage')">房貸月供試算</div>
+</div>
+
+<div class="container">
+    <div id="buyCost" class="content active">
+        <div class="card">
+            <label>成交總價 (萬元)</label>
+            <input type="number" id="price" value="2000">
+            <label>房屋課稅現值 (萬元) <span class="sub-tip">(契價)</span></label>
+            <input type="number" id="taxValue" value="200">
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;"><label>貸款成數 (%)</label><input type="number" id="loanPct" value="80"></div>
+                <div style="flex:1;"><label>仲介費 (%)</label><input type="number" id="agentPct" value="2"></div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;"><label>代書費預估 (元)</label><input type="number" id="scrivenerFee" value="20000"></div>
+                <div style="flex:1;"><label>銀行開辦費 (元)</label><input type="number" id="bankAdminFee" value="5000"></div>
+            </div>
+
+            <button onclick="calcBuy()">計算自備現金需求</button>
+
+            <div id="res_buy" class="result-box" style="display:none;">
+                <div class="row"><span>頭期款 (自備本金)：</span><span id="out_dp">0</span></div>
+                <div class="row"><span>契稅預估 (6%)：</span><span id="out_deedTax">0</span></div>
+                <div class="row"><span>貸款設定規費 (政府)：</span><span id="out_govReg">0</span></div>
+                <div class="row"><span>履約保證費 (1/2)：</span><span id="out_escrow">0</span></div>
+                <div class="row"><span>仲介服務費：</span><span id="out_agentFee">0</span></div>
+                <div class="row"><span>代書及銀行雜支：</span><span id="out_scrivener">0</span></div>
+                <div class="row total-text"><span>預計準備現金總計：</span><span id="out_grand">0</span></div>
+                <div class="disclaimer">※ 包含契稅、印花稅、登記規費、履保及雜支。實際金額以政府及銀行核定為準。</div>
+                <button class="copy-btn" onclick="copyBuyText()">📋 複製試算報告</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mortgage" class="content">
+        <div class="card">
+            <label>貸款金額 (萬元)</label>
+            <input type="number" id="m_loan" value="1600">
+            <label>還款方式</label>
+            <div class="radio-group">
+                <div id="type1" class="radio-btn selected" onclick="setType(1)">本息平均</div>
+                <div id="type2" class="radio-btn" onclick="setType(2)">本金平均</div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;"><label>貸款年限 (年)</label><input type="number" id="m_years" value="30"></div>
+                <div style="flex:1;"><label>寬限期 (年)</label><input type="number" id="m_grace" value="3"></div>
+            </div>
+            <label>第一階段利率 / 期間 (1~N月)</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="m_rate1" step="0.001" value="2.065">
+                <input type="number" id="m_period1" value="36">
+            </div>
+            <label>第二階段利率</label>
+            <input type="number" id="m_rate2" step="0.001" value="2.185">
+
+            <button onclick="calcMortgage()">計算每月負擔</button>
+
+            <div id="res_mort" class="result-box" style="display:none;">
+                <div class="row" id="graceRow" style="color: #f39c12;"><span id="graceLabel">寬限期：</span><span id="out_gracePay">0</span></div>
+                <div class="row" id="p1Row" style="color: #27ae60;"><span id="p1Label">第一階段：</span><span id="out_pay1">0</span></div>
+                <div class="row" id="p2Row" style="color: #2980b9;"><span id="p2Label">第二階段：</span><span id="out_pay2">0</span></div>
+                <div class="row total-text"><span>總利息支出預估：</span><span id="out_totalInt">0</span></div>
+                <div class="disclaimer">※ 本試算僅供規劃參考，利率隨政策機動調整，實際還款金額以銀行正式核貸通知書為準。</div>
+                <button class="copy-btn" onclick="copyMortgageText()">📋 複製試算報告</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let repayType = 1;
+function setType(t) { repayType = t; document.getElementById('type1').classList.toggle('selected', t===1); document.getElementById('type2').classList.toggle('selected', t===2); }
+function openTab(evt, tabName) {
+    let content = document.getElementsByClassName("content");
+    for (let i = 0; i < content.length; i++) content[i].className = content[i].className.replace(" active", "");
+    let tabs = document.getElementsByClassName("tab");
+    for (let i = 0; i < tabs.length; i++) tabs[i].className = tabs[i].className.replace(" active", "");
+    document.getElementById(tabName).className += " active";
+    evt.currentTarget.className += " active";
+}
+
+function fmt(n) { return Math.round(n).toLocaleString(); }
+
+function calcBuy() {
+    const P = parseFloat(document.getElementById('price').value) * 10000;
+    const Vh = parseFloat(document.getElementById('taxValue').value) * 10000;
+    const Lp = parseFloat(document.getElementById('loanPct').value) / 100;
+    const Ap = parseFloat(document.getElementById('agentPct').value) / 100;
+    const sFee = parseFloat(document.getElementById('scrivenerFee').value);
+    const bFee = parseFloat(document.getElementById('bankAdminFee').value);
+
+    const L = P * Lp;
+    const dp = P - L;
+    const deedTax = Vh * 0.06;
+    const govReg = L * 1.2 * 0.001;
+    const escrow = P * 0.0006 / 2;
+    const agentFee = P * Ap;
+    const total = dp + deedTax + govReg + escrow + agentFee + sFee + bFee;
+
+    document.getElementById('out_dp').innerText = "NT$ " + fmt(dp);
+    document.getElementById('out_deedTax').innerText = "NT$ " + fmt(deedTax);
+    document.getElementById('out_govReg').innerText = "NT$ " + fmt(govReg);
+    document.getElementById('out_escrow').innerText = "NT$ " + fmt(escrow);
+    document.getElementById('out_agentFee').innerText = "NT$ " + fmt(agentFee);
+    document.getElementById('out_scrivener').innerText = "NT$ " + fmt(sFee + bFee);
+    document.getElementById('out_grand').innerText = "NT$ " + fmt(total);
+    document.getElementById('res_buy').style.display = 'block';
+}
+
+function copyBuyText() {
+    const text = `【Homeway(鴻緯)購屋現金支出預算】\n成交總價：${document.getElementById('price').value} 萬\n---\n1. 頭期款：${document.getElementById('out_dp').innerText}\n2. 契稅預估：${document.getElementById('out_deedTax').innerText}\n3. 貸款設定規費：${document.getElementById('out_govReg').innerText}\n4. 履約保證費：${document.getElementById('out_escrow').innerText}\n5. 仲介服務費：${document.getElementById('out_agentFee').innerText}\n6. 代書及銀行雜支：${document.getElementById('out_scrivener').innerText}\n---\n★ 現金準備總計：${document.getElementById('out_grand').innerText}\n\n※ 本報告僅供參考，實際支出以政府及銀行核定為準。`;
+    navigator.clipboard.writeText(text).then(() => alert("支出報告已複製！"));
+}
+
+function calcMortgage() {
+    const P = parseFloat(document.getElementById('m_loan').value) * 10000;
+    const totalM = parseFloat(document.getElementById('m_years').value) * 12;
+    const graceM = parseFloat(document.getElementById('m_grace').value) * 12;
+    const r1 = parseFloat(document.getElementById('m_rate1').value) / 100 / 12;
+    let r2 = parseFloat(document.getElementById('m_rate2').value || 0) / 100 / 12;
+    const p1End = parseInt(document.getElementById('m_period1').value);
+    
+    if (r2 === 0) r2 = r1;
+    const repayM = totalM - graceM;
+    let pay_grace = P * r1, pay_p1 = 0, pay_p2 = 0, totalInt = 0, currentP = P;
+
+    if (repayType === 1) { // 本息平均
+        if (p1End > graceM) {
+            pay_p1 = (P * Math.pow(1 + r1, repayM) * r1) / (Math.pow(1 + r1, repayM) - 1);
+            for(let i=0; i<(p1End-graceM); i++) {
+                currentP = currentP * (1 + r1) - pay_p1;
+            }
+        }
+        const p2Months = totalM - Math.max(p1End, graceM);
+        if (p2Months > 0) {
+            pay_p2 = (currentP * Math.pow(1 + r2, p2Months) * r2) / (Math.pow(1 + r2, p2Months) - 1);
+        } else {
+            pay_p2 = pay_p1;
+        }
+        totalInt = (pay_grace * graceM) + (pay_p1 * Math.max(0, p1End - graceM)) + (pay_p2 * Math.max(0, p2Months)) - P;
+    } else { // 本金平均
+        const avgP = P / repayM;
+        pay_p1 = avgP + (P * r1);
+        let remainP_p2 = P - (Math.max(0, p1End - graceM)) * avgP;
+        pay_p2 = avgP + (remainP_p2 * r2);
+        let tempP = P;
+        for(let i=1; i<=repayM; i++) {
+            let r = (i + graceM <= p1End) ? r1 : r2;
+            totalInt += (tempP * r);
+            tempP -= avgP;
+        }
+        totalInt += (pay_grace * graceM);
+    }
+
+    // 介面優化標籤
+    document.getElementById('out_gracePay').innerText = "NT$ " + fmt(pay_grace);
+    document.getElementById('graceLabel').innerText = `寬限期 (1~${graceM}月)：`;
+    document.getElementById('graceRow').style.display = graceM > 0 ? 'flex' : 'none';
+
+    document.getElementById('out_pay1').innerText = "NT$ " + fmt(pay_p1);
+    document.getElementById('p1Label').innerText = `第一階段 (${graceM + 1}~${p1End}月)：`;
+    document.getElementById('p1Row').style.display = (p1End > graceM) ? 'flex' : 'none';
+
+    document.getElementById('out_pay2').innerText = "NT$ " + fmt(pay_p2);
+    const p2Start = Math.max(p1End, graceM) + 1;
+    document.getElementById('p2Label').innerText = `第二階段 (${p2Start}~${totalM}月)：`;
+    document.getElementById('p2Row').style.display = (totalM > Math.max(p1End, graceM)) ? 'flex' : 'none';
+
+    document.getElementById('out_totalInt').innerText = "NT$ " + fmt(totalInt);
+    document.getElementById('res_mort').style.display = 'block';
+}
+
+function copyMortgageText() {
+    const text = `【Homeway(鴻緯)房貸還款試算】\n貸款：${document.getElementById('m_loan').value} 萬 (${repayType===1?'本息':'本金'})\n---\n● 寬限期月繳：${document.getElementById('out_gracePay').innerText}\n● 第一階段月繳：${document.getElementById('out_pay1').innerText}\n● 第二階段月繳：${document.getElementById('out_pay2').innerText}\n---\n★ 總利息支出：${document.getElementById('out_totalInt').innerText}\n\n※ 本資料僅供參考，實際還款額以銀行通知書為準。`;
+    navigator.clipboard.writeText(text).then(() => alert("試算報告已複製！"));
+}
+</script>
+</body>
+</html>
