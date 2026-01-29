@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Homeway(鴻緯)賣方專業估價系統</title>
+    <title>Homeway 鴻緯賣方專業估價系統</title>
     <style>
         :root { --primary: #2c3e50; --accent: #E74C3C; --old-mode: #2980b9; --bg: #f0f2f5; --card-shadow: 0 10px 30px rgba(0,0,0,0.08); }
         body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; }
@@ -44,7 +44,7 @@
 <body>
 
 <div class="header">
-    <h1>🏠 Homeway(鴻緯)賣方專業估價</h1>
+    <h1>🏠 Homeway 鴻緯賣方專業估價</h1>
 </div>
 
 <div class="tabs">
@@ -76,7 +76,7 @@
                 <div style="font-size:0.85em;">符合<b>「自住滿 6 年」</b>優惠？</div>
                 <label class="toggle"><input type="checkbox" id="n_selfUse"><span class="slider"></span></label>
             </div>
-            <button class="btn-main btn-new" onclick="calcNew()">啟動發財估價 🚀</button>
+            <button class="btn-main btn-new" onclick="calcNew()">啟動Homeway專業估價 🚀</button>
             <div id="res_new" class="result-box">
                 <div id="n_res_title" style="text-align:center; font-size:0.8em; opacity:0.8;">建議成交總價</div>
                 <div class="res-price" id="o_n_price">0 萬</div>
@@ -111,7 +111,7 @@
                 <div style="flex:1;"><label>🔥 土增稅預估 (萬)</label><input type="number" id="o_landTax" value="120"></div>
                 <div style="flex:1;"><label>🤝 仲介費率 (%)</label><input type="number" id="o_agentP" value="4"></div>
             </div>
-            <button class="btn-main btn-old" onclick="calcOld()">啟動專業估價 🚀</button>
+            <button class="btn-main btn-old" onclick="calcOld()">啟動Homeway專業估價 🚀</button>
             <div id="res_old" class="result-box">
                 <div id="o_res_title" style="text-align:center; font-size:0.8em; opacity:0.8;">建議成交總價</div>
                 <div class="res-price" id="o_o_price">0 萬</div>
@@ -189,7 +189,7 @@
 
     function copyText(type) {
         const price = (type==='new') ? document.getElementById('o_n_price').innerText : document.getElementById('o_o_price').innerText;
-        const text = `【Homeway(鴻緯)賣方專業估價】\n成交估計：${price}\n---\n※ 試算結果僅供規劃參考，以國稅局正式核定為準。`;
+        const text = `【Homeway 鴻緯賣方專業估價】\n成交估計：${price}\n---\n※ 試算結果僅供規劃參考，以國稅局正式核定為準。`;
         navigator.clipboard.writeText(text).then(() => alert("報告已複製！"));
     }
 
