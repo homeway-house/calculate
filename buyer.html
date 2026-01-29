@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Homeway(鴻緯)房產專業工作台</title>
+    <title>Homeway 鴻緯房產專業工作台</title>
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f4f7f6; }
         body { font-family: -apple-system, "Noto Sans TC", sans-serif; background: var(--bg); margin: 0; padding: 0; }
@@ -31,7 +31,7 @@
 </head>
 <body>
 
-<div class="header">🏠 Homeway(鴻緯)房產專業工作台</div>
+<div class="header">🏠 Homeway 鴻緯房產專業工作台</div>
 
 <div class="tabs">
     <div class="tab active" onclick="openTab(event, 'buyCost')">購屋自備試算</div>
@@ -146,7 +146,7 @@ function calcBuy() {
 }
 
 function copyBuyText() {
-    const text = `【Homeway(鴻緯)購屋現金支出預算】\n成交總價：${document.getElementById('price').value} 萬\n---\n1. 頭期款：${document.getElementById('out_dp').innerText}\n2. 契稅預估：${document.getElementById('out_deedTax').innerText}\n3. 貸款設定規費：${document.getElementById('out_govReg').innerText}\n4. 履約保證費：${document.getElementById('out_escrow').innerText}\n5. 仲介服務費：${document.getElementById('out_agentFee').innerText}\n6. 代書及銀行雜支：${document.getElementById('out_scrivener').innerText}\n---\n★ 現金準備總計：${document.getElementById('out_grand').innerText}\n\n※ 本報告僅供參考，實際支出以政府及銀行核定為準。`;
+    const text = `【Homeway 鴻緯購屋現金支出預算】\n成交總價：${document.getElementById('price').value} 萬\n---\n1. 頭期款：${document.getElementById('out_dp').innerText}\n2. 契稅預估：${document.getElementById('out_deedTax').innerText}\n3. 貸款設定規費：${document.getElementById('out_govReg').innerText}\n4. 履約保證費：${document.getElementById('out_escrow').innerText}\n5. 仲介服務費：${document.getElementById('out_agentFee').innerText}\n6. 代書及銀行雜支：${document.getElementById('out_scrivener').innerText}\n---\n★ 現金準備總計：${document.getElementById('out_grand').innerText}\n\n※ 本報告僅供參考，實際支出以政府及銀行核定為準。`;
     navigator.clipboard.writeText(text).then(() => alert("支出報告已複製！"));
 }
 
@@ -209,7 +209,7 @@ function calcMortgage() {
 }
 
 function copyMortgageText() {
-    const text = `【Homeway(鴻緯)房貸還款試算】\n貸款：${document.getElementById('m_loan').value} 萬 (${repayType===1?'本息':'本金'})\n---\n● 寬限期月繳：${document.getElementById('out_gracePay').innerText}\n● 第一階段月繳：${document.getElementById('out_pay1').innerText}\n● 第二階段月繳：${document.getElementById('out_pay2').innerText}\n---\n★ 總利息支出：${document.getElementById('out_totalInt').innerText}\n\n※ 本資料僅供參考，實際還款額以銀行通知書為準。`;
+    const text = `【Homeway 鴻緯房貸還款試算】\n貸款：${document.getElementById('m_loan').value} 萬 (${repayType===1?'本息':'本金'})\n---\n● 寬限期月繳：${document.getElementById('out_gracePay').innerText}\n● 第一階段月繳：${document.getElementById('out_pay1').innerText}\n● 第二階段月繳：${document.getElementById('out_pay2').innerText}\n---\n★ 總利息支出：${document.getElementById('out_totalInt').innerText}\n\n※ 本資料僅供參考，實際還款額以銀行通知書為準。`;
     navigator.clipboard.writeText(text).then(() => alert("試算報告已複製！"));
 }
 </script>
