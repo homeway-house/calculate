@@ -65,7 +65,7 @@
             <input type="number" id="n_cost" value="666">
             <div style="display:flex; gap:10px;">
                 <div style="flex:1;"><label>雜費+土增稅 (萬)</label><input type="number" id="n_misc" value="40"></div>
-                <div style="flex:1;"><label>仲介費 (%)</label><input type="number" id="n_agentP" value="4"></div>
+                <!--<div style="flex:1;"><label>仲介費 (%)</label><input type="number" id="n_agentP" value="4"></div>-->
             </div>
             <label>持有日期判定</label>
             <div style="display:flex; gap:10px;">
@@ -82,7 +82,7 @@
                 <div class="res-price" id="o_n_price">0 萬</div>
                 <div class="row"><span>📝 適用稅制：</span><span id="o_n_taxLabel" style="color:#F1C40F;">--</span></div>
                 <div class="row"><span>💸 預估房地合一稅：</span><span id="o_n_tax">0 萬</span></div>
-                <div class="row"><span>🤝 預估仲介費：</span><span id="o_n_agent">0 萬</span></div>
+                <div class="row"><span>🤝 預估仲介費(4%)：</span><span id="o_n_agent">0 萬</span></div>
                 <div class="disclaimer">※ 本報告依房地合一稅制試算，實際應納稅額及費用以國稅局核定及實際合約為準。</div>
                 <button class="copy-btn" onclick="copyText('new')">📋 複製專業報告</button>
             </div>
@@ -109,7 +109,7 @@
             </select>
             <div style="display:flex; gap:10px;">
                 <div style="flex:1;"><label>🔥 土增稅預估 (萬)</label><input type="number" id="o_landTax" value="120"></div>
-                <div style="flex:1;"><label>🤝 仲介費率 (%)</label><input type="number" id="o_agentP" value="4"></div>
+                <!--<div style="flex:1;"><label>🤝 仲介費率 (%)</label><input type="number" id="o_agentP" value="4"></div>-->
             </div>
             <button class="btn-main btn-old" onclick="calcOld()">啟動Homeway專業估價 🚀</button>
             <div id="res_old" class="result-box">
@@ -117,7 +117,7 @@
                 <div class="res-price" id="o_o_price">0 萬</div>
                 <div class="row"><span>📝 預估財交稅(舊制)：</span><span id="o_o_tax" style="color:#F1C40F;">0 萬</span></div>
                 <div class="row"><span>🔥 土地增值稅：</span><span id="o_o_land">0 萬</span></div>
-                <div class="row"><span>🤝 預估仲介費：</span><span id="o_o_agent">0 萬</span></div>
+                <div class="row"><span>🤝 預估仲介費(4%)：</span><span id="o_o_agent">0 萬</span></div>
                 <div class="disclaimer">※ 舊制所得稅將併入個人綜所稅於隔年 5 月申報。本試算僅供規劃參考，實際稅額依報稅狀況為準。</div>
                 <button class="copy-btn" onclick="copyText('old')">📋 複製專業報告</button>
             </div>
@@ -141,7 +141,7 @@
     function calcNew() {
         const mode = document.getElementById('n_rev').classList.contains('selected') ? 'reverse' : 'forward';
         const val = parseFloat(document.getElementById('n_val').value)*10000, cost = parseFloat(document.getElementById('n_cost').value)*10000;
-        const misc = parseFloat(document.getElementById('n_misc').value)*10000, ar = parseFloat(document.getElementById('n_agentP').value)/100;
+        const misc = parseFloat(document.getElementById('n_misc').value)*10000, ar = 0.04; // parseFloat(document.getElementById('n_agentP').value)/100;
         const start = new Date(document.getElementById('n_buyDate').value), end = new Date(document.getElementById('n_sellDate').value);
         const yrs = (end - start)/(31557600000), isSelf = document.getElementById('n_selfUse').checked;
         let tr = 0.2, exemp = 0, tName = "20% (5-10年)";
@@ -168,7 +168,7 @@
     function calcOld() {
         const mode = document.getElementById('o_rev').classList.contains('selected') ? 'reverse' : 'forward';
         const val = parseFloat(document.getElementById('o_val').value)*10000, hV = parseFloat(document.getElementById('o_houseV').value)*10000;
-        const lT = parseFloat(document.getElementById('o_landTax').value)*10000, ar = parseFloat(document.getElementById('o_agentP').value)/100;
+        const lT = parseFloat(document.getElementById('o_landTax').value)*10000, ar = 0.04; // parseFloat(document.getElementById('o_agentP').value)/100;
         const uR = parseFloat(document.getElementById('o_userRate').value);
         const tax = (hV * 0.30) * uR; // 假設地區核定比例 30%
 
