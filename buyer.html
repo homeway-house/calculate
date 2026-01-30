@@ -47,7 +47,7 @@
             <input type="number" id="taxValue" value="200">
             <div style="display: flex; gap: 10px;">
                 <div style="flex:1;"><label>貸款成數 (%)</label><input type="number" id="loanPct" value="80"></div>
-                '<div style="flex:1;"><label>仲介費 (%)</label><input type="number" id="agentPct" value="2"></div>'
+                `<div style="flex:1;"><label>仲介費 (%)</label><input type="number" id="agentPct" value="2"></div>`
             </div>
             <div style="display: flex; gap: 10px;">
                 <div style="flex:1;"><label>代書費預估 (元)</label><input type="number" id="scrivenerFee" value="20000"></div>
@@ -123,7 +123,7 @@ function calcBuy() {
     const P = parseFloat(document.getElementById('price').value) * 10000;
     const Vh = parseFloat(document.getElementById('taxValue').value) * 10000;
     const Lp = parseFloat(document.getElementById('loanPct').value) / 100;
-    const Ap = 0.02 'parseFloat(document.getElementById('agentPct').value) / 100;'
+    const Ap = 0.02 `parseFloat(document.getElementById('agentPct').value) / 100;`
     const sFee = parseFloat(document.getElementById('scrivenerFee').value);
     const bFee = parseFloat(document.getElementById('bankAdminFee').value);
 
